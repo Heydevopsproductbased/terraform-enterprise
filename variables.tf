@@ -49,5 +49,6 @@ variable "admin_username" {
 variable "admin_password" {
   description = "Admin password for VM"
   type        = string
+  default     = "Admin@12345!"
   sensitive   = true
 }
