@@ -34,6 +34,7 @@ stages:
         ARM_SUBSCRIPTION_ID: c967d50f-7f21-4985-bd4f-1befa0e42d1a
         ARM_TENANT_ID: 068b196a-2d57-407f-a70d-3c0571c3266a
         ARM_USE_CLI: "true"
+        TF_VAR_admin_password: \$(admin_password)
     - script: terraform plan -out=tfplan
       displayName: 'Terraform Plan'
       workingDirectory: \
@@ -41,6 +42,7 @@ stages:
         ARM_SUBSCRIPTION_ID: c967d50f-7f21-4985-bd4f-1befa0e42d1a
         ARM_TENANT_ID: 068b196a-2d57-407f-a70d-3c0571c3266a
         ARM_USE_CLI: "true"
+        TF_VAR_admin_password: \$(admin_password)
 
 - stage: Apply
   displayName: 'Apply Terraform'
@@ -56,6 +58,7 @@ stages:
         ARM_SUBSCRIPTION_ID: c967d50f-7f21-4985-bd4f-1befa0e42d1a
         ARM_TENANT_ID: 068b196a-2d57-407f-a70d-3c0571c3266a
         ARM_USE_CLI: "true"
+        TF_VAR_admin_password: \$(admin_password)
     - script: terraform apply -auto-approve tfplan
       displayName: 'Terraform Apply'
       workingDirectory: \
@@ -63,3 +66,4 @@ stages:
         ARM_SUBSCRIPTION_ID: c967d50f-7f21-4985-bd4f-1befa0e42d1a
         ARM_TENANT_ID: 068b196a-2d57-407f-a70d-3c0571c3266a
         ARM_USE_CLI: "true"
+        TF_VAR_admin_password: \$(admin_password)
