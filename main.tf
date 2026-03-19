@@ -1,6 +1,6 @@
 resource "azurerm_resource_group" "main" {
   name     = var.resource_group_name
-  location = "westeurope"
+  location = "uksouth"
   tags = {
     environment = var.environment
     project     = var.project_name
@@ -57,7 +57,7 @@ resource "azurerm_linux_virtual_machine" "main" {
   name                            = "vm-${var.project_name}-${var.environment}"
   resource_group_name             = azurerm_resource_group.main.name
   location                        = azurerm_resource_group.main.location
-  size                            = "Standard_B1s"
+  size                            = "Standard_B1ls"
   admin_username                  = var.admin_username
   admin_password                  = var.admin_password
   disable_password_authentication = false
