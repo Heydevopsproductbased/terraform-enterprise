@@ -7,6 +7,7 @@ resource "azurerm_resource_group" "main" {
   }
 }
 
+
 resource "azurerm_virtual_network" "main" {
   name                = "vnet-${var.project_name}-${var.environment}"
   address_space       = [var.vnet_address_space]
@@ -17,12 +18,14 @@ resource "azurerm_virtual_network" "main" {
   }
 }
 
+
 resource "azurerm_subnet" "main" {
   name                 = "subnet-${var.project_name}-${var.environment}"
   resource_group_name  = azurerm_resource_group.main.name
   virtual_network_name = azurerm_virtual_network.main.name
   address_prefixes     = [var.subnet_address_prefix]
 }
+
 
 resource "azurerm_public_ip" "main" {
   name                = "pip-${var.project_name}-${var.environment}"
@@ -34,6 +37,7 @@ resource "azurerm_public_ip" "main" {
     environment = var.environment
   }
 }
+
 
 resource "azurerm_network_interface" "main" {
   name                = "nic-${var.project_name}-${var.environment}"
@@ -48,11 +52,12 @@ resource "azurerm_network_interface" "main" {
   }
 }
 
+
 resource "azurerm_linux_virtual_machine" "main" {
   name                            = "vm-${var.project_name}-${var.environment}"
   resource_group_name             = azurerm_resource_group.main.name
   location                        = azurerm_resource_group.main.location
-  size                            = var.vm_size
+  size                            = "Standard_B2s"
   admin_username                  = var.admin_username
   admin_password                  = var.admin_password
   disable_password_authentication = false
