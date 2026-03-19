@@ -1,0 +1,76 @@
+trigger:
+  - main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  - name: TF_VERSION
+    value: '1.7.3'
+
+stages:
+  - stage: TerraformPlan
+    displayName: 'Terraform Plan'
+    jobs:
+      - job: Plan
+        steps:
+          - script: |
+              wget -q https://releases.hashicorp.com/terraform/$(TF_VERSION)/terraform_$(TF_VERSION)_linux_amd64.zip
+              unzip terraform_$(TF_VERSION)_linux_amd64.zip
+              sudo mv terraform /usr/local/bin/
+              terraform --version
+            displayName: 'Install Terraform'
+
+          - script: |
+              az login --service-principal \
+                --username $(ARM_CLIENT_ID) \
+                --password $(ARM_CLIENT_SECRET) \
+                --tenant $(ARM_TENANT_ID)
+              az account set --subscription $(ARM_SUBSCRIPTION_ID)
+            displayName: 'Azure Login'
+
+          - script: |
+              terraform init \
+                -backend-config="resource_group_name=rg-terraform-enterprise" \
+                -backend-config="storage_account_name=tfstatepriyanka" \
+                -backend-config="container_name=tfstate" \
+                -backend-config="key=terraform.tfstate"
+            displayName: 'Terraform Init'
+
+          - script: |
+              terraform plan -var="admin_password=$(TF_ADMIN_PASSWORD)"
+            displayName: 'Terraform Plan'
+
+  - stage: TerraformApply
+    displayName: 'Terraform Apply'
+    dependsOn: TerraformPlan
+    jobs:
+      - job: Apply
+        steps:
+          - script: |
+              wget -q https://releases.hashicorp.com/terraform/$(TF_VERSION)/terraform_$(TF_VERSION)_linux_amd64.zip
+              unzip terraform_$(TF_VERSION)_linux_amd64.zip
+              sudo mv terraform /usr/local/bin/
+            displayName: 'Install Terraform'
+
+          - script: |
+              az login --service-principal \
+                --username $(ARM_CLIENT_ID) \
+                --password $(ARM_CLIENT_SECRET) \
+                --tenant $(ARM_TENANT_ID)
+              az account set --subscription $(ARM_SUBSCRIPTION_ID)
+            displayName: 'Azure Login'
+
+          - script: |
+              terraform init \
+                -backend-config="resource_group_name=rg-terraform-enterprise" \
+                -backend-config="storage_account_name=tfstatepriyanka" \
+                -backend-config="container_name=tfstate" \
+                -backend-config="key=terraform.tfstate"
+            displayName: 'Terraform Init'
+
+          - script: |
+              terraform apply -auto-approve \
+                -var="admin_password=$(TF_ADMIN_PASSWORD)"
+            displayName: 'Terraform Apply'
+
