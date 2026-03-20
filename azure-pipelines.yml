@@ -1,10 +1,8 @@
 ﻿trigger:
 - main
 
-
 pool:
   name: Default
-
 
 stages:
 - stage: Validate
@@ -23,7 +21,6 @@ stages:
       displayName: Terraform Validate
       workingDirectory: $(Build.SourcesDirectory)
 
-
 - stage: Plan
   displayName: Plan Terraform
   dependsOn: Validate
@@ -31,7 +28,7 @@ stages:
   jobs:
   - job: Plan
     steps:
-    - script: terraform init -backend-config="resource_group_name=rg-terraform-enterprise" -backend-config="storage_account_name=tfstatepriyanka" -backend-config="container_name=tfstate" -backend-config="key=terraform.tfstate"
+    - script: terraform init -backend-config="resource_group_name=rg-terraform-state" -backend-config="storage_account_name=tfstatepriyanka" -backend-config="container_name=tfstate" -backend-config="key=terraform.tfstate"
       displayName: Terraform Init
       workingDirectory: $(Build.SourcesDirectory)
       env:
@@ -46,7 +43,6 @@ stages:
         ARM_TENANT_ID: 068b196a-2d57-407f-a70d-3c0571c3266a
         ARM_USE_CLI: "true"
 
-
 - stage: Apply
   displayName: Apply Terraform
   dependsOn: Plan
@@ -54,7 +50,7 @@ stages:
   jobs:
   - job: Apply
     steps:
-    - script: terraform init -backend-config="resource_group_name=rg-terraform-enterprise" -backend-config="storage_account_name=tfstatepriyanka" -backend-config="container_name=tfstate" -backend-config="key=terraform.tfstate"
+    - script: terraform init -backend-config="resource_group_name=rg-terraform-state" -backend-config="storage_account_name=tfstatepriyanka" -backend-config="container_name=tfstate" -backend-config="key=terraform.tfstate"
       displayName: Terraform Init
       workingDirectory: $(Build.SourcesDirectory)
       env:
