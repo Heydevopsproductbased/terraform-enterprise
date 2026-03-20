@@ -35,7 +35,7 @@ stages:
         ARM_SUBSCRIPTION_ID: c967d50f-7f21-4985-bd4f-1befa0e42d1a
         ARM_TENANT_ID: 068b196a-2d57-407f-a70d-3c0571c3266a
         ARM_USE_CLI: "true"
-    - script: terraform plan -var="admin_password=Admin@12345!" -out=tfplan
+    - script: terraform plan -var="admin_password=$(TF_ADMIN_PASSWORD)" -out=tfplan
       displayName: Terraform Plan
       workingDirectory: $(Build.SourcesDirectory)
       env:
@@ -100,7 +100,13 @@ stages:
         ARM_SUBSCRIPTION_ID: c967d50f-7f21-4985-bd4f-1befa0e42d1a
         ARM_TENANT_ID: 068b196a-2d57-407f-a70d-3c0571c3266a
         ARM_USE_CLI: "true"
-    - script: terraform destroy -var="admin_password=Admin@12345!" -auto-approve
+    - script: terraform apply -auto-approve tfplan
+      displayName: Terraform Destroy
+      workingDirectory: $(Build.SourcesDirectory)
+      env:
+        ARM_SUBSCRIPTION_ID: c967d50f-7f21-4985-bd4f-1befa0e42d1a
+        ARM_TENANT_ID: 068b196a-2d57-407f-a70d-3c0571c3266a
+    - script: terraform destroy -var="admin_password=$(TF_ADMIN_PASSWORD)" -auto-approve
       displayName: Terraform Destroy
       workingDirectory: $(Build.SourcesDirectory)
       env:
