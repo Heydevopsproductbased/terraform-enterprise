@@ -56,8 +56,8 @@ resource "azurerm_network_interface" "main" {
 resource "azurerm_linux_virtual_machine" "main" {
   name                            = "vm-${var.project_name}-${var.environment}"
   resource_group_name             = azurerm_resource_group.main.name
-  location                        = azurerm_resource_group.main.location
-  size                            = "Standard_F2s_v2"
+  location                        = "uksouth"
+  size                            = "Standard_A2_v2"
   admin_username                  = var.admin_username
   admin_password                  = var.admin_password
   disable_password_authentication = false
